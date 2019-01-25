@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-
+from send_email import send_email
 app = Flask(__name__)
 
-app.config['SLQALCHEMY_DATABASE_URI'] = 'postgresql://postres:postgres123@localhost/height_collector'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/height_collector'
 db = SQLAlchemy(app)
 
 
@@ -29,8 +29,14 @@ def success():
     if request.method == "POST":
         email = request.form["email_name"]
         height = request.form["height_name"]
-        print(email, height)
-        return render_template("success.html")
+        send_email(email, height)
+        if(db.session.query(Data).filter(Data.email_ == email).count() == 0):
+            data = Data(email, height)
+            db.session.add(data)
+            db.session.commit()
+            return render_template("success.html")
+
+    return render_template("index.html", text="Duplicate email detected, try another email address, this email already exist in our system")
 
 
 if __name__ == "__main__":

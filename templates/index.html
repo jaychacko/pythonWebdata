@@ -10,6 +10,9 @@
         <h1>Collecting height</h1>
         <h3>Please fill the entires to get population statistics on height</h3>
         <!-- <div class="email"> {{text | safe}} </div>  -->
+        <div class="message">
+          {{text | safe}}
+        </div>
         <form action="{{url_for('success')}}" method='POST'>
 
           <input title="Your email will be safe with us" placeholder="Enter your email address" type="email" name="email_name" required> <br>
